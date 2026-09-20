@@ -1,0 +1,454 @@
+<title>نبض كلاود واتساب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --bg: #F6F4EC;
+    --surface: #FFFFFF;
+    --surface-alt: #EEEBDF;
+    --ink: #1B231E;
+    --ink-muted: #5C6A5F;
+    --accent: #1C6E4E;
+    --accent-strong: #14523A;
+    --accent-soft: #E3EFE7;
+    --border: #DEDACB;
+    --warn: #9C5A1E;
+    --warn-soft: #F6E7D5;
+    --warn-border: #E7C99B;
+    --font-display: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+    --font-body: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10160F;
+      --surface: #171F19;
+      --surface-alt: #1D2721;
+      --ink: #E9EEE8;
+      --ink-muted: #91A196;
+      --accent: #4FD9A5;
+      --accent-strong: #79E6BE;
+      --accent-soft: #1B3329;
+      --border: #2A362E;
+      --warn: #E6AD75;
+      --warn-soft: #372A19;
+      --warn-border: #4B3A22;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10160F;
+    --surface: #171F19;
+    --surface-alt: #1D2721;
+    --ink: #E9EEE8;
+    --ink-muted: #91A196;
+    --accent: #4FD9A5;
+    --accent-strong: #79E6BE;
+    --accent-soft: #1B3329;
+    --border: #2A362E;
+    --warn: #E6AD75;
+    --warn-soft: #372A19;
+    --warn-border: #4B3A22;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+  .page {
+    direction: rtl;
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: 20px;
+    padding-block: 36px 64px;
+    font-size: 15.5px;
+    line-height: 1.75;
+  }
+  a { color: var(--accent-strong); }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-strong);
+    flex-shrink: 0;
+  }
+
+  h1.title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 6vw, 38px);
+    line-height: 1.2;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  p.subtitle {
+    color: var(--ink-muted);
+    font-size: 16px;
+    max-width: 58ch;
+    margin: 0 0 22px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-muted);
+    border-block: 1px solid var(--border);
+    padding-block: 12px;
+    margin-bottom: 28px;
+  }
+  .meta-row b { color: var(--ink); font-weight: 600; }
+
+  .top-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 28px;
+  }
+
+  button.copy-btn, button.digest-btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 13.5px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  button.copy-btn:hover, button.digest-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+  button.digest-btn {
+    background: var(--accent-strong);
+    color: var(--bg);
+    border-color: var(--accent-strong);
+  }
+  button.digest-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  button.copied { color: var(--accent-strong); border-color: var(--accent-strong); }
+  button:focus-visible, a:focus-visible {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 2px;
+  }
+
+  .callout {
+    background: var(--warn-soft);
+    border: 1px solid var(--warn-border);
+    border-inline-start: 4px solid var(--warn);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 34px;
+  }
+  .callout .label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--warn);
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .callout h3 {
+    font-family: var(--font-display);
+    font-size: 19px;
+    margin: 0 0 8px;
+  }
+  .callout p { margin: 0; color: var(--ink); }
+
+  #entries {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .entry-date {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18.5px;
+    line-height: 1.4;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  .entry-body { margin: 0 0 14px; color: var(--ink); }
+  .entry-body + .entry-body { margin-top: -8px; }
+  .entry-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .entry-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 12px;
+    color: var(--ink-muted);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .entry-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .source-link {
+    font-size: 13px;
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent-strong);
+  }
+  .source-link:hover { border-bottom-style: solid; }
+
+  table.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 12px 0 16px;
+  }
+  .table-wrap { overflow-x: auto; }
+  table.price-table th, table.price-table td {
+    text-align: start;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.price-table th {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--ink-muted);
+    font-size: 12px;
+  }
+  table.price-table td:first-child, table.price-table th:first-child {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  footer.page-footer {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--ink-muted);
+    font-size: 12.5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
+</style>
+
+<div class="page" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow"><span class="dot"></span>نشرة دورية · تتحدث كل يومين تلقائيًا</span>
+    <h1 class="title">نبض كلاود واتساب</h1>
+    <p class="subtitle">أهم أخبار وتحديثات WhatsApp Cloud API مُجمَّعة ومُلخَّصة بالعربي، جاهزة تقرأها في أي وقت أو تنسخ منها وتشاركها على لينكيدإن أو قبيلة.</p>
+    <div class="meta-row">
+      <span>آخر تحديث: <b data-role="last-updated">20 سبتمبر 2026</b></span>
+      <span>عدد الأخبار المرصودة: <b data-role="entry-count">4</b></span>
+      <span>المصادر: <b>Meta for Developers · TechCrunch · Reddit ‎r/WhatsappBusinessAPI</b></span>
+    </div>
+  </header>
+
+  <div class="top-actions">
+    <button class="digest-btn" id="copyDigest" type="button">نسخ ملخص النشرة كاملة</button>
+  </div>
+
+  <section class="callout">
+    <span class="label">الأهم في هذا التحديث</span>
+    <h3>نهاية الردود المجانية داخل نافذة الـ24 ساعة</h3>
+    <p>ابتداءً من 1 أكتوبر 2026، الردود اللي بترسلها جوه نافذة خدمة العملاء (24 ساعة) — سواء من فريق الدعم أو من بوت رد آلي — هتبقى مدفوعة لكل رسالة بدل ما كانت مجانية بالكامل. الرسائل الواردة من العميل نفسه لسه مجانية، وكمان نافذة الـ72 ساعة الخاصة بإعلانات Click-to-WhatsApp. أي مشروع بيعتمد على رد تلقائي كثيف على واتساب هيحتاج يراجع حساباته قبل الموعد ده.</p>
+  </section>
+
+  <main id="entries">
+
+    <article class="entry" data-date="2026-09-15">
+      <span class="entry-date">15 سبتمبر 2026</span>
+      <h2 class="entry-title">ميتا تطلق MCP Server يخلي وكلاء الذكاء الاصطناعي يجهزوا حساب واتساب بيزنس لوحدهم</h2>
+      <p class="entry-body">أعلنت ميتا عن "WhatsApp Business Tools MCP" — خادم يربط وكلاء AI (زي Claude وChatGPT) مباشرة بمنصة WhatsApp Business، بحيث يقدروا ينشئوا حسابات، يتحققوا من أرقام الهواتف، يديروا قوالب الرسائل، ويراقبوا الـ webhooks — كل ده من غير التنقل اليدوي بين Developer Console وBusiness Manager. الخادم بيشتغل جنبًا إلى جنب مع Meta Social Technologies MCP لاكتشاف نقاط النهاية والتوثيق وحل الأخطاء.</p>
+      <div class="entry-footer">
+        <div class="entry-tags"><span class="tag">أدوات مطورين</span><span class="tag">AI Agents</span></div>
+        <div class="entry-actions">
+          <a class="source-link" href="https://techcrunch.com/2026/09/15/meta-now-lets-ai-agents-handle-the-boring-parts-of-whatsapp-business-setup/" target="_blank" rel="noopener">TechCrunch</a>
+          <button class="copy-btn" type="button">نسخ الملخص</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry" data-date="2026-10-01">
+      <span class="entry-date">يسري من 1 أكتوبر 2026</span>
+      <h2 class="entry-title">خريطة كاملة لتغييرات التسعير في 2026</h2>
+      <p class="entry-body">التسعير بيتغيّر على أكتر من محور بالتوازي. أهم المحطات:</p>
+      <div class="table-wrap">
+        <table class="price-table">
+          <thead><tr><th>التاريخ</th><th>التغيير</th></tr></thead>
+          <tbody>
+            <tr><td>أغسطس 2026</td><td>تسعير رسائل Meta Business Agent بـ 2.00$ لكل مليون توكن (رسم واحد يشمل الـ AI والإرسال)</td></tr>
+            <tr><td>1 أكتوبر 2026</td><td>رسائل Service وUtility داخل نافذة الـ24 ساعة تبقى مدفوعة لكل رسالة بدل المجانية</td></tr>
+            <tr><td>يناير 2026</td><td>فوترة بالروبية الهندية (INR)، رفع أسعار تسويق الهند وخفضها لأمريكا الشمالية</td></tr>
+            <tr><td>أبريل 2026</td><td>رفع معدل المصادقة الدولية للهند + إضافة 8 عملات فوترة جديدة</td></tr>
+            <tr><td>يوليو 2026</td><td>فوترة بالريال البرازيلي (BRL) + تحديثات أسعار أوروبا والمملكة المتحدة</td></tr>
+            <tr><td>أكتوبر 2026</td><td>معدلات مصادقة دولية جديدة (بنغلاديش، العراق، نيبال، أوكرانيا)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="entry-footer">
+        <div class="entry-tags"><span class="tag">تسعير</span><span class="tag">فوترة</span></div>
+        <div class="entry-actions">
+          <a class="source-link" href="https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/non-template-messages" target="_blank" rel="noopener">Meta for Developers — Pricing</a>
+          <button class="copy-btn" type="button">نسخ الملخص</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry" data-date="2026-04-17">
+      <span class="entry-date">أبريل 2026</span>
+      <h2 class="entry-title">تحديثات فنية في الـ Changelog الرسمي</h2>
+      <p class="entry-body">ثلاث تحديثات فنية مهمة سُجّلت في نفس الشهر: (١) كود خطأ جديد 131064 بيظهر لما الحساب يتجاوز الحد المسموح بسبب "انتهاكات تصنيف القالب". (٢) دعم تسجيل أرقام واتساب بيزنس من نيجيريا وجنوب أفريقيا عبر Embedded Signup. (٣) إضافة كائن disconnection_info لحدث PARTNER_REMOVED في الـ webhooks، بيوضح سبب قطع الاتصال بدقة أكبر.</p>
+      <div class="entry-footer">
+        <div class="entry-tags"><span class="tag">Changelog</span><span class="tag">Webhooks</span></div>
+        <div class="entry-actions">
+          <a class="source-link" href="https://developers.facebook.com/documentation/business-messaging/whatsapp/changelog" target="_blank" rel="noopener">Meta Changelog</a>
+          <button class="copy-btn" type="button">نسخ الملخص</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry" data-date="2026-09-14">
+      <span class="entry-date">نقاش متداول</span>
+      <h2 class="entry-title">قلق متزايد بين المطورين حول تكلفة الاعتماد على Cloud API في 2026</h2>
+      <p class="entry-body">نقاش نشط في مجتمع r/WhatsappBusinessAPI بيعكس قلق عدد من المطورين والشركات الصغيرة من تراكم تغييرات التسعير المتتالية خلال 2026 (نهاية النافذة المجانية، تسعير الرسائل بالتوكن، تعدد العملات) وتأثيرها على نماذج التسعير الخاصة بيهم. النقاش تحذيري بطبيعته أكتر من كونه إعلان رسمي، فمفيد كمؤشر على اتجاه السوق مش كخبر مؤكد من ميتا.</p>
+      <div class="entry-footer">
+        <div class="entry-tags"><span class="tag">مجتمع المطورين</span></div>
+        <div class="entry-actions">
+          <a class="source-link" href="https://www.reddit.com/r/WhatsappBusinessAPI/comments/1ustd4w/whatsapp_cloud_api_in_2026_the_you_lose_your/" target="_blank" rel="noopener">Reddit — r/WhatsappBusinessAPI</a>
+          <button class="copy-btn" type="button">نسخ الملخص</button>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="page-footer">
+    <span>الصفحة دي بتتحدث تلقائيًا كل يومين — الساعة 9 بالليل بتوقيت القاهرة.</span>
+    <span>آخر إعداد: 20 سبتمبر 2026</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  function flashButton(btn, msg) {
+    if (!btn) return;
+    var original = btn.textContent;
+    btn.textContent = msg;
+    btn.classList.add('copied');
+    setTimeout(function () {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 1600);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function copyText(text, btn) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          flashButton(btn, 'تم النسخ');
+        }).catch(function () {
+          var ok = fallbackCopy(text);
+          flashButton(btn, ok ? 'تم النسخ' : 'تعذر النسخ');
+        });
+      } else {
+        var ok = fallbackCopy(text);
+        flashButton(btn, ok ? 'تم النسخ' : 'تعذر النسخ');
+      }
+    } catch (e) {
+      flashButton(btn, 'تعذر النسخ');
+    }
+  }
+
+  var entriesEl = document.getElementById('entries');
+  if (entriesEl) {
+    entriesEl.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.copy-btn') : null;
+      if (!btn) return;
+      var entry = btn.closest('.entry');
+      if (!entry) return;
+      var title = (entry.querySelector('.entry-title') || {}).textContent || '';
+      var bodies = entry.querySelectorAll('.entry-body');
+      var bodyText = Array.prototype.map.call(bodies, function (p) { return p.textContent.trim(); }).join('\n');
+      var sourceEl = entry.querySelector('.source-link');
+      var sourceText = sourceEl ? (sourceEl.textContent.trim() + ' — ' + sourceEl.getAttribute('href')) : '';
+      var text = [title.trim(), bodyText, sourceText].filter(Boolean).join('\n\n');
+      copyText(text, btn);
+    });
+  }
+
+  var digestBtn = document.getElementById('copyDigest');
+  if (digestBtn) {
+    digestBtn.addEventListener('click', function () {
+      var lines = ['نبض كلاود واتساب — آخر تحديثات WhatsApp Cloud API', ''];
+      document.querySelectorAll('.entry').forEach(function (entry) {
+        var t = (entry.querySelector('.entry-title') || {}).textContent || '';
+        lines.push('• ' + t.trim());
+      });
+      lines.push('', 'التفاصيل والمصادر: ' + location.href);
+      copyText(lines.join('\n'), digestBtn);
+    });
+  }
+
+  try {
+    if (window.claude && window.claude.hot) {
+      var ready = window.claude.hot.ready;
+      if (typeof ready === 'function') ready(function () {});
+    }
+  } catch (e) {}
+})();
+</script>
